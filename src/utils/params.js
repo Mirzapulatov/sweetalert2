@@ -1,31 +1,18 @@
-import { warn, warnAboutDeprecation } from '../utils/utils.js'
+import { warn, warnAboutDepreation } from '../utils/utils.js'
 
-export const defaultParams = {
+const defaultParams = {
   title: '',
   titleText: '',
   text: '',
   html: '',
   footer: '',
-  icon: undefined,
-  iconColor: undefined,
-  iconHtml: undefined,
-  template: undefined,
+  type: null,
   toast: false,
-  animation: true,
-  showClass: {
-    popup: 'swal2-show',
-    backdrop: 'swal2-backdrop-show',
-    icon: 'swal2-icon-show',
-  },
-  hideClass: {
-    popup: 'swal2-hide',
-    backdrop: 'swal2-backdrop-hide',
-    icon: 'swal2-icon-hide',
-  },
-  customClass: {},
+  customClass: '',
+  customContainerClass: '',
   target: 'body',
-  color: undefined,
   backdrop: true,
+  animation: true,
   heightAuto: true,
   allowOutsideClick: true,
   allowEscapeKey: true,
@@ -33,131 +20,104 @@ export const defaultParams = {
   stopKeydownPropagation: true,
   keydownListenerCapture: false,
   showConfirmButton: true,
-  showDenyButton: false,
   showCancelButton: false,
-  preConfirm: undefined,
-  preDeny: undefined,
+  preConfirm: null,
   confirmButtonText: 'OK',
   confirmButtonAriaLabel: '',
-  confirmButtonColor: undefined,
-  denyButtonText: 'No',
-  denyButtonAriaLabel: '',
-  denyButtonColor: undefined,
+  confirmButtonColor: null,
+  confirmButtonClass: '',
   cancelButtonText: 'Cancel',
   cancelButtonAriaLabel: '',
-  cancelButtonColor: undefined,
+  cancelButtonColor: null,
+  cancelButtonClass: '',
   buttonsStyling: true,
   reverseButtons: false,
   focusConfirm: true,
-  focusDeny: false,
   focusCancel: false,
-  returnFocus: true,
   showCloseButton: false,
   closeButtonHtml: '&times;',
   closeButtonAriaLabel: 'Close this dialog',
-  loaderHtml: '',
   showLoaderOnConfirm: false,
-  showLoaderOnDeny: false,
-  imageUrl: undefined,
-  imageWidth: undefined,
-  imageHeight: undefined,
+  imageUrl: null,
+  imageWidth: null,
+  imageHeight: null,
   imageAlt: '',
-  timer: undefined,
-  timerProgressBar: false,
-  width: undefined,
-  padding: undefined,
-  background: undefined,
-  input: undefined,
+  imageClass: '',
+  timer: null,
+  width: null,
+  padding: null,
+  background: null,
+  input: null,
   inputPlaceholder: '',
-  inputLabel: '',
   inputValue: '',
   inputOptions: {},
-  inputAutoFocus: true,
   inputAutoTrim: true,
+  inputClass: '',
   inputAttributes: {},
-  inputValidator: undefined,
-  returnInputValueOnDeny: false,
-  validationMessage: undefined,
+  inputValidator: null,
+  validationMessage: null,
   grow: false,
   position: 'center',
   progressSteps: [],
-  currentProgressStep: undefined,
-  progressStepsDistance: undefined,
-  willOpen: undefined,
-  didOpen: undefined,
-  didRender: undefined,
-  willClose: undefined,
-  didClose: undefined,
-  didDestroy: undefined,
-  scrollbarPadding: true,
+  currentProgressStep: null,
+  progressStepsDistance: null,
+  onBeforeOpen: null,
+  onOpen: null,
+  onRender: null,
+  onClose: null,
+  onAfterClose: null,
+  scrollbarPadding: true
 }
 
-export const updatableParams = [
-  'allowEscapeKey',
-  'allowOutsideClick',
-  'background',
-  'buttonsStyling',
-  'cancelButtonAriaLabel',
-  'cancelButtonColor',
-  'cancelButtonText',
-  'closeButtonAriaLabel',
-  'closeButtonHtml',
-  'color',
-  'confirmButtonAriaLabel',
-  'confirmButtonColor',
-  'confirmButtonText',
-  'currentProgressStep',
-  'customClass',
-  'denyButtonAriaLabel',
-  'denyButtonColor',
-  'denyButtonText',
-  'didClose',
-  'didDestroy',
-  'footer',
-  'hideClass',
-  'html',
-  'icon',
-  'iconColor',
-  'iconHtml',
-  'imageAlt',
-  'imageHeight',
-  'imageUrl',
-  'imageWidth',
-  'preConfirm',
-  'preDeny',
-  'progressSteps',
-  'returnFocus',
-  'reverseButtons',
-  'showCancelButton',
-  'showCloseButton',
-  'showConfirmButton',
-  'showDenyButton',
-  'text',
+const updatableParams = [
   'title',
   'titleText',
-  'willClose',
+  'text',
+  'html',
+  'type',
+  'customClass',
+  'showConfirmButton',
+  'showCancelButton',
+  'confirmButtonText',
+  'confirmButtonAriaLabel',
+  'confirmButtonColor',
+  'confirmButtonClass',
+  'cancelButtonText',
+  'cancelButtonAriaLabel',
+  'cancelButtonColor',
+  'cancelButtonClass',
+  'buttonsStyling',
+  'reverseButtons',
+  'imageUrl',
+  'imageWidth',
+  'imageHeigth',
+  'imageAlt',
+  'imageClass',
+  'progressSteps',
+  'currentProgressStep'
 ]
 
-/** @type {Record<string, string>} */
-export const deprecatedParams = {}
+export const deprecatedParams = {
+  customContainerClass: 'customClass',
+  confirmButtonClass: 'customClass',
+  cancelButtonClass: 'customClass',
+  imageClass: 'customClass',
+  inputClass: 'customClass'
+}
 
 const toastIncompatibleParams = [
   'allowOutsideClick',
   'allowEnterKey',
   'backdrop',
   'focusConfirm',
-  'focusDeny',
   'focusCancel',
-  'returnFocus',
   'heightAuto',
-  'keydownListenerCapture',
+  'keydownListenerCapture'
 ]
 
 /**
  * Is valid parameter
- *
- * @param {string} paramName
- * @returns {boolean}
+ * @param {String} paramName
  */
 export const isValidParameter = (paramName) => {
   return Object.prototype.hasOwnProperty.call(defaultParams, paramName)
@@ -165,9 +125,7 @@ export const isValidParameter = (paramName) => {
 
 /**
  * Is valid parameter for Swal.update() method
- *
- * @param {string} paramName
- * @returns {boolean}
+ * @param {String} paramName
  */
 export const isUpdatableParameter = (paramName) => {
   return updatableParams.indexOf(paramName) !== -1
@@ -175,52 +133,36 @@ export const isUpdatableParameter = (paramName) => {
 
 /**
  * Is deprecated parameter
- *
- * @param {string} paramName
- * @returns {string | undefined}
+ * @param {String} paramName
  */
 export const isDeprecatedParameter = (paramName) => {
   return deprecatedParams[paramName]
 }
 
-/**
- * @param {string} param
- */
 const checkIfParamIsValid = (param) => {
   if (!isValidParameter(param)) {
     warn(`Unknown parameter "${param}"`)
   }
 }
 
-/**
- * @param {string} param
- */
 const checkIfToastParamIsValid = (param) => {
   if (toastIncompatibleParams.includes(param)) {
     warn(`The parameter "${param}" is incompatible with toasts`)
   }
 }
 
-/**
- * @param {string} param
- */
 const checkIfParamIsDeprecated = (param) => {
-  const isDeprecated = isDeprecatedParameter(param)
-  if (isDeprecated) {
-    warnAboutDeprecation(param, isDeprecated)
+  if (isDeprecatedParameter(param)) {
+    warnAboutDepreation(param, isDeprecatedParameter(param))
   }
 }
 
 /**
  * Show relevant warnings for given params
  *
- * @param {SweetAlertOptions} params
+ * @param params
  */
 export const showWarningsForParams = (params) => {
-  if (params.backdrop === false && params.allowOutsideClick) {
-    warn('"allowOutsideClick" parameter requires `backdrop` parameter to be set to `true`')
-  }
-
   for (const param in params) {
     checkIfParamIsValid(param)
 
@@ -228,7 +170,7 @@ export const showWarningsForParams = (params) => {
       checkIfToastParamIsValid(param)
     }
 
-    checkIfParamIsDeprecated(param)
+    checkIfParamIsDeprecated()
   }
 }
 

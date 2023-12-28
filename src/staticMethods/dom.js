@@ -1,27 +1,23 @@
-import * as domUtils from '../utils/dom/domUtils.js'
 import * as dom from '../utils/dom/index.js'
+import * as domUtils from '../utils/dom/domUtils.js'
 
 export {
   getContainer,
   getPopup,
   getTitle,
-  getHtmlContainer,
+  getContent,
   getImage,
   getIcon,
-  getIconContent,
-  getInputLabel,
+  getIcons,
   getCloseButton,
   getActions,
   getConfirmButton,
-  getDenyButton,
   getCancelButton,
-  getLoader,
+  getHeader,
   getFooter,
-  getTimerProgressBar,
   getFocusableElements,
   getValidationMessage,
-  getProgressSteps,
-  isLoading,
+  isLoading
 } from '../utils/dom/index.js'
 
 /*
@@ -34,14 +30,9 @@ export const isVisible = () => {
 /*
  * Global function to click 'Confirm' button
  */
-export const clickConfirm = () => dom.getConfirmButton()?.click()
-
-/*
- * Global function to click 'Deny' button
- */
-export const clickDeny = () => dom.getDenyButton()?.click()
+export const clickConfirm = () => dom.getConfirmButton() && dom.getConfirmButton().click()
 
 /*
  * Global function to click 'Cancel' button
  */
-export const clickCancel = () => dom.getCancelButton()?.click()
+export const clickCancel = () => dom.getCancelButton() && dom.getCancelButton().click()

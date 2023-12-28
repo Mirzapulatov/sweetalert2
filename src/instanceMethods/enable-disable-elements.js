@@ -1,31 +1,20 @@
-import * as dom from '../utils/dom/index.js'
 import privateProps from '../privateProps.js'
-import { swalClasses } from '../utils/classes.js'
+import { warnAboutDepreation } from '../utils/utils.js'
 
-/**
- * @param {SweetAlert} instance
- * @param {string[]} buttons
- * @param {boolean} disabled
- */
-function setButtonsDisabled(instance, buttons, disabled) {
+function setButtonsDisabled (instance, buttons, disabled) {
   const domCache = privateProps.domCache.get(instance)
-  buttons.forEach((button) => {
+  buttons.forEach(button => {
     domCache[button].disabled = disabled
   })
 }
 
-/**
- * @param {HTMLInputElement | null} input
- * @param {boolean} disabled
- */
-function setInputDisabled(input, disabled) {
-  const popup = dom.getPopup()
-  if (!popup || !input) {
-    return
+function setInputDisabled (input, disabled) {
+  if (!input) {
+    return false
   }
   if (input.type === 'radio') {
-    /** @type {NodeListOf<HTMLInputElement>} */
-    const radios = popup.querySelectorAll(`[name="${swalClasses.radio}"]`)
+    const radiosContainer = input.parentNode.parentNode
+    const radios = radiosContainer.querySelectorAll('input')
     for (let i = 0; i < radios.length; i++) {
       radios[i].disabled = disabled
     }
@@ -34,34 +23,30 @@ function setInputDisabled(input, disabled) {
   }
 }
 
-/**
- * Enable all the buttons
- * @this {SweetAlert}
- */
-export function enableButtons() {
-  setButtonsDisabled(this, ['confirmButton', 'denyButton', 'cancelButton'], false)
+export function enableButtons () {
+  setButtonsDisabled(this, ['confirmButton', 'cancelButton'], false)
 }
 
-/**
- * Disable all the buttons
- * @this {SweetAlert}
- */
-export function disableButtons() {
-  setButtonsDisabled(this, ['confirmButton', 'denyButton', 'cancelButton'], true)
+export function disableButtons () {
+  setButtonsDisabled(this, ['confirmButton', 'cancelButton'], true)
 }
 
-/**
- * Enable the input field
- * @this {SweetAlert}
- */
-export function enableInput() {
-  setInputDisabled(this.getInput(), false)
+// @deprecated
+export function enableConfirmButton () {
+  warnAboutDepreation('Swal.enableConfirmButton()', `Swal.getConfirmButton().removeAttribute('disabled')`)
+  setButtonsDisabled(this, ['confirmButton'], false)
 }
 
-/**
- * Disable the input field
- * @this {SweetAlert}
- */
-export function disableInput() {
-  setInputDisabled(this.getInput(), true)
+// @deprecated
+export function disableConfirmButton () {
+  warnAboutDepreation('Swal.disableConfirmButton()', `Swal.getConfirmButton().setAttribute('disabled', '')`)
+  setButtonsDisabled(this, ['confirmButton'], true)
+}
+
+export function enableInput () {
+  return setInputDisabled(this.getInput(), false)
+}
+
+export function disableInput () {
+  return setInputDisabled(this.getInput(), true)
 }
